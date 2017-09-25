@@ -1,8 +1,11 @@
 package org.apache.commons.mail;
 import org.junit.Test;
 import junit.framework.TestCase;
+import org.apache.commons.mail.Email;
 
 public class EmailTest extends TestCase {
+	
+	protected Email emailTest;// = new Email();
 	
 	@Test
     public void testAddBcc() throws Exception {
