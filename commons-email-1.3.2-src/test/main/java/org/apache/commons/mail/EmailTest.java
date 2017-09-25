@@ -102,6 +102,20 @@ public class EmailTest extends TestCase {
     }
 	
 	@Test
+    public void testBuildMimeMessageNoFrom() throws Exception {
+		emailTest.setHostName("mail.myserver.com");
+		emailTest.addTo("jdoe@somewhere.org", "John Doe");
+		emailTest.setSubject("Test message");
+		emailTest.setMsg("This is a simple test of commons-email");
+		
+		try {
+			emailTest.buildMimeMessage();
+		} catch(EmailException e) {
+			assertEquals("From address required", e.getMessage().toString());
+		}
+    }
+	
+	@Test
     public void testBuildMimeMessageNoList() throws Exception {
 		emailTest.setHostName("mail.myserver.com");
 		emailTest.setFrom("me@apache.org", "Me");
@@ -113,6 +127,17 @@ public class EmailTest extends TestCase {
 		} catch(EmailException e) {
 			assertEquals("At least one receiver address required", e.getMessage().toString());
 		}
+    }
+	
+	@Test
+    public void testBuildMimeMessageNoMessage() throws Exception {
+		emailTest.setHostName("mail.myserver.com");
+		emailTest.addTo("jdoe@somewhere.org", "John Doe");
+		emailTest.setFrom("me@apache.org", "Me");
+		emailTest.setSubject("Test message");
+		
+		emailTest.buildMimeMessage();
+		assertNotNull(emailTest.getMimeMessage());
     }
 	
 	@Test
