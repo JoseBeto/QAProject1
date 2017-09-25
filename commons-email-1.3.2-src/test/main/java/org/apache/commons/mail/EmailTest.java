@@ -90,6 +90,7 @@ public class EmailTest extends TestCase {
 		emailTest.addTo("jdoe@somewhere.org", "John Doe");
 		emailTest.setFrom("me@apache.org", "Me");
 		emailTest.setSubject("Test message");
+		emailTest.setCharset("ASCII");
 		emailTest.setMsg("This is a simple test of commons-email");
 		emailTest.addBcc("testEmailBcc@gmail.com");
 		emailTest.addCc("testEmailCc@gmail.com");
@@ -118,9 +119,9 @@ public class EmailTest extends TestCase {
     public void testBuildMimeMessageAlreadyExists() throws Exception {
 		emailTest.setHostName("mail.myserver.com");
 		emailTest.addTo("jdoe@somewhere.org", "John Doe");
-		emailTest.setFrom("me@apache.org", "Me");
-		emailTest.setSubject("Test message");
-		emailTest.setMsg("This is a simple test of commons-email");
+		emailTest.setFrom("test@gmail.org", "testName");
+		emailTest.setSubject("Test Subject");
+		emailTest.setMsg("This is a test");
 		
 		emailTest.buildMimeMessage();
 		try {
@@ -169,10 +170,16 @@ public class EmailTest extends TestCase {
         
     }
 	
-	@Test
+	/*@Test
     public void testSend() throws Exception {
-        
-    }
+		emailTest.setHostName("mail.gmail.com");
+		emailTest.addTo("jdoe@somewhere.org", "John Doe");
+		emailTest.setFrom("me@apache.org", "Me");
+		emailTest.setSubject("Test message");
+		emailTest.setMsg("This is a simple test of commons-email");
+		
+		emailTest.send();
+    }*/
 	
 	@Test
     public void testSetFrom() throws Exception {
