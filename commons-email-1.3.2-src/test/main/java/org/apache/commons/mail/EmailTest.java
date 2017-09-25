@@ -1,6 +1,11 @@
 package org.apache.commons.mail;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.mail.Session;
+import javax.mail.internet.AddressException;
 
 import org.junit.Test;
 import junit.framework.TestCase;
@@ -27,7 +32,7 @@ public class EmailTest extends TestCase {
     }
 	
 	@Test
-    public void testAddCc() throws Exception { //Test addCc(String... emails) ??? If so add test with emptyStringArray
+    public void testAddCc() throws Exception { 
         emailTest.addCc("addCcTest@gmail.com");
         assertEquals("addCcTest@gmail.com", emailTest.getCcAddresses().get(0).toString());
     }
@@ -59,18 +64,85 @@ public class EmailTest extends TestCase {
     }
 	
 	@Test
-    public void testAddReplyTo() throws Exception {
-        
+    public void testAddReplyToSuccess() throws Exception {
+		emailTest.addReplyTo("replyToTest@gmail.com", "testName");
+        assertEquals("testName <replyToTest@gmail.com>", emailTest.getReplyToAddresses().get(0).toString());
+    }
+	
+	@Test
+    public void testAddReplyToNoName() throws Exception {
+		emailTest.addReplyTo("replyToTest@gmail.com", "");
+        assertEquals("replyToTest@gmail.com", emailTest.getReplyToAddresses().get(0).toString());
+    }
+	
+	@Test
+    public void testAddReplyToNoEmail() throws Exception {
+		try {
+			emailTest.addReplyTo("", "testName");
+		} catch(EmailException e) {
+			assertEquals(new EmailException(new AddressException("Illegal address in string ``''")).getMessage(), e.getMessage());
+		}
     }
 	
 	@Test
     public void testBuildMimeMessage() throws Exception {
-        
+		emailTest.setHostName("mail.myserver.com");
+		emailTest.addTo("jdoe@somewhere.org", "John Doe");
+		emailTest.setFrom("me@apache.org", "Me");
+		emailTest.setSubject("Test message");
+		emailTest.setMsg("This is a simple test of commons-email");
+		emailTest.addBcc("testEmailBcc@gmail.com");
+		emailTest.addCc("testEmailCc@gmail.com");
+		emailTest.addReplyTo("testEmailReply@gmail.com");
+		emailTest.addHeader("testHeader", "4");
+		
+		emailTest.buildMimeMessage();
+		assertNotNull(emailTest.getMimeMessage());
+    }
+	
+	@Test
+    public void testBuildMimeMessageNoList() throws Exception {
+		emailTest.setHostName("mail.myserver.com");
+		emailTest.setFrom("me@apache.org", "Me");
+		emailTest.setSubject("Test message");
+		emailTest.setMsg("This is a simple test of commons-email");
+		
+		try {
+			emailTest.buildMimeMessage();
+		} catch(EmailException e) {
+			assertEquals("At least one receiver address required", e.getMessage().toString());
+		}
+    }
+	
+	@Test
+    public void testBuildMimeMessageAlreadyExists() throws Exception {
+		emailTest.setHostName("mail.myserver.com");
+		emailTest.addTo("jdoe@somewhere.org", "John Doe");
+		emailTest.setFrom("me@apache.org", "Me");
+		emailTest.setSubject("Test message");
+		emailTest.setMsg("This is a simple test of commons-email");
+		
+		emailTest.buildMimeMessage();
+		try {
+			emailTest.buildMimeMessage();
+		} catch(IllegalStateException e) {
+			assertEquals("The MimeMessage is already built.", e.getMessage().toString());
+		}
+		
     }
 	
 	@Test
     public void testGetHostName() throws Exception {
-        
+		//Properties props = new Properties();
+		//Session session = Session.getInstance(props);
+		//emailTest.setMailSession(session);
+		//assertEquals("test", emailTest.getHostName());
+    }
+	
+	
+	@Test
+    public void testGetHostNameNullSession() throws Exception {
+        assertEquals(null, emailTest.getHostName());
     }
 	
 	@Test
@@ -79,8 +151,15 @@ public class EmailTest extends TestCase {
     }
 	
 	@Test
+    public void testGetSentDateNull() throws Exception {
+        assertEquals(new Date(), emailTest.getSentDate());
+    }
+	
+	@Test
     public void testGetSentDate() throws Exception {
-        
+		Date date = new Date();
+		emailTest.setSentDate(date);
+        assertEquals(date, emailTest.getSentDate());
     }
 	
 	@Test
@@ -95,7 +174,8 @@ public class EmailTest extends TestCase {
 	
 	@Test
     public void testSetFrom() throws Exception {
-        
+		emailTest.setFrom("testEmail@gmail.com");
+        assertEquals("testEmail@gmail.com", emailTest.getFromAddress().getAddress());
     }
 	
 	@Test
