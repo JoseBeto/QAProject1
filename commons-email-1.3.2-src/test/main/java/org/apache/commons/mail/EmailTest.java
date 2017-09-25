@@ -1,15 +1,15 @@
 package org.apache.commons.mail;
 import org.junit.Test;
 import junit.framework.TestCase;
-import org.apache.commons.mail.Email;
 
 public class EmailTest extends TestCase {
 	
-	protected Email emailTest;// = new Email();
+	protected SimpleEmail emailTest = new SimpleEmail();
 	
 	@Test
     public void testAddBcc() throws Exception {
-		//assertEquals, expected value first
+		assertEquals(emailTest
+				, emailTest.addBcc("Test@gmail.com"));
     }
 	
 	@Test
