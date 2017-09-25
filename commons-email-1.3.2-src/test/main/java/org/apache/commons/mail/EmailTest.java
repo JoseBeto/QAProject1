@@ -133,12 +133,14 @@ public class EmailTest extends TestCase {
 	
 	@Test
     public void testGetHostName() throws Exception {
-		//Properties props = new Properties();
-		//Session session = Session.getInstance(props);
-		//emailTest.setMailSession(session);
-		//assertEquals("test", emailTest.getHostName());
+		emailTest.setHostName("my.server.com");
+		assertNotNull(emailTest.getHostName());
     }
 	
+	@Test
+    public void testGetHostNameNoHostName() throws Exception {
+		assertEquals(null, emailTest.getHostName());
+    }
 	
 	@Test
     public void testGetHostNameNullSession() throws Exception {
