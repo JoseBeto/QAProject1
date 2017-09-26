@@ -3,7 +3,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 
@@ -154,7 +153,6 @@ public class EmailTest extends TestCase {
 		} catch(IllegalStateException e) {
 			assertEquals("The MimeMessage is already built.", e.getMessage().toString());
 		}
-		
     }
 	
 	@Test
@@ -175,7 +173,18 @@ public class EmailTest extends TestCase {
 	
 	@Test
     public void testGetMailSession() throws Exception {
+        emailTest.setSSL(true);
+        emailTest.setSSLCheckServerIdentity(true);
         
+        emailTest.setHostName("mail.myserver.com");
+		emailTest.addTo("jdoe@somewhere.org", "John Doe");
+		emailTest.setFrom("test@gmail.org", "testName");
+		emailTest.setSubject("Test Subject");
+		emailTest.setMsg("This is a test");
+		
+		emailTest.buildMimeMessage();
+        
+        assertNotNull(emailTest.getMailSession());
     }
 	
 	@Test
@@ -192,19 +201,21 @@ public class EmailTest extends TestCase {
 	
 	@Test
     public void testGetSocketConnectionTimeout() throws Exception {
-        
+        assertNotNull(emailTest.getSocketConnectionTimeout());
     }
 	
-	/*@Test
+	@Test
     public void testSend() throws Exception {
-		emailTest.setHostName("mail.gmail.com");
-		emailTest.addTo("jdoe@somewhere.org", "John Doe");
+		emailTest.setHostName("smtp.gmail.com");
+		emailTest.setSSL(true);
+		emailTest.setSmtpPort(80);
+		emailTest.addTo("jbocanegra96@gmail.com", "jose bocanegra");
 		emailTest.setFrom("me@apache.org", "Me");
 		emailTest.setSubject("Test message");
 		emailTest.setMsg("This is a simple test of commons-email");
 		
 		emailTest.send();
-    }*/
+    }
 	
 	@Test
     public void testSetFrom() throws Exception {
@@ -214,6 +225,7 @@ public class EmailTest extends TestCase {
 	
 	@Test
     public void testUpdateContentType() throws Exception {
-        
+        emailTest.updateContentType("test");
+        assertNotNull(emailTest.contentType);
     }
 }
