@@ -162,15 +162,11 @@ public class EmailTest extends TestCase {
     }
 	
 	@Test
-    public void testGetHostNameNoHostName() throws Exception {
-		assertEquals(null, emailTest.getHostName());
-    }
-	
-	@Test
     public void testGetHostNameNullSession() throws Exception {
         assertEquals(null, emailTest.getHostName());
     }
 	
+	@SuppressWarnings("deprecation")
 	@Test
     public void testGetMailSession() throws Exception {
         emailTest.setSSL(true);
@@ -186,6 +182,25 @@ public class EmailTest extends TestCase {
         
         assertNotNull(emailTest.getMailSession());
     }
+	
+	@Test
+	public void testGetSessionSSLOnConnect() throws Exception {
+	    emailTest.setSSLOnConnect(true);
+	    emailTest.setHostName("mail.myserver.com");
+		
+		assertNotNull(emailTest.getMailSession());
+	}
+	
+	@Test
+	public void testGetMailSessionNoHostName() throws Exception {
+		emailTest.setSSLOnConnect(true);
+		
+		try {
+			emailTest.getMailSession();
+		} catch(EmailException e) {
+			assertEquals(new EmailException("Cannot find valid hostname for mail session").getMessage(), e.getMessage());
+		}
+	}
 	
 	@Test
     public void testGetSentDateNull() throws Exception {
@@ -207,12 +222,19 @@ public class EmailTest extends TestCase {
 	@Test
     public void testSend() throws Exception {
 		emailTest.setHostName("smtp.gmail.com");
-		emailTest.setSSL(true);
+		emailTest.addTo("test@gmail.com", "test name");
+		emailTest.setFrom("fromtest@gmail.com", "test fromName");
+		emailTest.setHostName("localhost");
 		emailTest.setSmtpPort(80);
-		emailTest.addTo("jbocanegra96@gmail.com", "jose bocanegra");
-		emailTest.setFrom("me@apache.org", "Me");
 		emailTest.setSubject("Test message");
 		emailTest.setMsg("This is a simple test of commons-email");
+		
+		Properties prop = System.getProperties();
+		prop.setProperty("mail.smtp.host", emailTest.getHostName());
+		
+		Session session = Session.getDefaultInstance(prop);
+		emailTest.setMailSession(session);
+		emailTest.createMimeMessage(session);
 		
 		emailTest.send();
     }
