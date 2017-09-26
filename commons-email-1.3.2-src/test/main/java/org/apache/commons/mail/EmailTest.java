@@ -3,6 +3,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 
@@ -221,22 +222,14 @@ public class EmailTest extends TestCase {
 	
 	@Test
     public void testSend() throws Exception {
-		emailTest.setHostName("smtp.gmail.com");
-		emailTest.addTo("test@gmail.com", "test name");
-		emailTest.setFrom("fromtest@gmail.com", "test fromName");
 		emailTest.setHostName("localhost");
-		emailTest.setSmtpPort(80);
-		emailTest.setSubject("Test message");
-		emailTest.setMsg("This is a simple test of commons-email");
+		emailTest.setFrom("test@test.com");
+		emailTest.setSubject("TestMail");
+		emailTest.setMsg("This is a test mail");
+		emailTest.addTo("foo@bar.com");
+		emailTest.setSmtpPort(2525);
 		
-		Properties prop = System.getProperties();
-		prop.setProperty("mail.smtp.host", emailTest.getHostName());
-		
-		Session session = Session.getDefaultInstance(prop);
-		emailTest.setMailSession(session);
-		emailTest.createMimeMessage(session);
-		
-		emailTest.send();
+		assertNotNull(emailTest.send());
     }
 	
 	@Test
