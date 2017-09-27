@@ -6,7 +6,6 @@ import java.util.Properties;
 
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
-
 import org.junit.Test;
 import junit.framework.TestCase;
 
@@ -86,9 +85,9 @@ public class EmailTest extends TestCase {
 	
 	@Test
     public void testBuildMimeMessage() throws Exception {
-		emailTest.setHostName("mail.myserver.com");
-		emailTest.addTo("jdoe@somewhere.org", "John Doe");
-		emailTest.setFrom("me@apache.org", "Me");
+		emailTest.setHostName("locahost");
+		emailTest.addTo("foo@bar.com");
+		emailTest.setFrom("test@gmail.com");
 		emailTest.setSubject("Test message");
 		emailTest.setCharset("ASCII");
 		emailTest.setMsg("This is a simple test of commons-email");
@@ -103,8 +102,8 @@ public class EmailTest extends TestCase {
 	
 	@Test
     public void testBuildMimeMessageNoFrom() throws Exception {
-		emailTest.setHostName("mail.myserver.com");
-		emailTest.addTo("jdoe@somewhere.org", "John Doe");
+		emailTest.setHostName("locahost");
+		emailTest.addTo("foo@bar.com");
 		emailTest.setSubject("Test message");
 		emailTest.setMsg("This is a simple test of commons-email");
 		
@@ -117,8 +116,8 @@ public class EmailTest extends TestCase {
 	
 	@Test
     public void testBuildMimeMessageNoList() throws Exception {
-		emailTest.setHostName("mail.myserver.com");
-		emailTest.setFrom("me@apache.org", "Me");
+		emailTest.setHostName("locahost");
+		emailTest.setFrom("test@gmail.com");
 		emailTest.setSubject("Test message");
 		emailTest.setMsg("This is a simple test of commons-email");
 		
@@ -131,9 +130,9 @@ public class EmailTest extends TestCase {
 	
 	@Test
     public void testBuildMimeMessageNoMessage() throws Exception {
-		emailTest.setHostName("mail.myserver.com");
-		emailTest.addTo("jdoe@somewhere.org", "John Doe");
-		emailTest.setFrom("me@apache.org", "Me");
+		emailTest.setHostName("locahost");
+		emailTest.addTo("foo@bar.com");
+		emailTest.setFrom("test@gmail.com");
 		emailTest.setSubject("Test message");
 		
 		emailTest.buildMimeMessage();
@@ -142,9 +141,9 @@ public class EmailTest extends TestCase {
 	
 	@Test
     public void testBuildMimeMessageAlreadyExists() throws Exception {
-		emailTest.setHostName("mail.myserver.com");
-		emailTest.addTo("jdoe@somewhere.org", "John Doe");
-		emailTest.setFrom("test@gmail.org", "testName");
+		emailTest.setHostName("locahost");
+		emailTest.addTo("foo@bar.com");
+		emailTest.setFrom("test@gmail.com");
 		emailTest.setSubject("Test Subject");
 		emailTest.setMsg("This is a test");
 		
@@ -173,9 +172,9 @@ public class EmailTest extends TestCase {
         emailTest.setSSL(true);
         emailTest.setSSLCheckServerIdentity(true);
         
-        emailTest.setHostName("mail.myserver.com");
-		emailTest.addTo("jdoe@somewhere.org", "John Doe");
-		emailTest.setFrom("test@gmail.org", "testName");
+        emailTest.setHostName("locahost");
+		emailTest.addTo("foo@bar.com");
+		emailTest.setFrom("test@gmail.com");
 		emailTest.setSubject("Test Subject");
 		emailTest.setMsg("This is a test");
 		
@@ -187,7 +186,7 @@ public class EmailTest extends TestCase {
 	@Test
 	public void testGetSessionSSLOnConnect() throws Exception {
 	    emailTest.setSSLOnConnect(true);
-	    emailTest.setHostName("mail.myserver.com");
+	    emailTest.setHostName("localhost");
 		
 		assertNotNull(emailTest.getMailSession());
 	}
@@ -223,13 +222,16 @@ public class EmailTest extends TestCase {
 	@Test
     public void testSend() throws Exception {
 		emailTest.setHostName("localhost");
-		emailTest.setFrom("test@test.com");
-		emailTest.setSubject("TestMail");
+		emailTest.setFrom("test@gmail.com");
+		emailTest.setSubject("Test Mail");
 		emailTest.setMsg("This is a test mail");
 		emailTest.addTo("foo@bar.com");
 		emailTest.setSmtpPort(2525);
-		
-		assertNotNull(emailTest.send());
+		try{
+			assertNotNull(emailTest.send());
+		} catch(EmailException e){
+			System.out.println("Error: Run fakeSMTP listening to port 2525");
+		}
     }
 	
 	@Test
